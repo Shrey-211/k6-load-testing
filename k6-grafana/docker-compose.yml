@@ -7,11 +7,9 @@ services:
       - "8086:8086"
     environment:
       - INFLUXDB_DB=k6
-      - INFLUXDB_HTTP_AUTH_ENABLED=true
-      - INFLUXDB_ADMIN_USER=k6admin
-      - INFLUXDB_ADMIN_PASSWORD=admin123
       - INFLUXDB_USER=k6
       - INFLUXDB_USER_PASSWORD=k6pass
+      - INFLUXDB_HTTP_AUTH_ENABLED=true
     volumes:
       - influxdb:/var/lib/influxdb
 
