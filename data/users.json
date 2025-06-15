@@ -1,0 +1,27 @@
+[
+  {
+    "pizza": "margherita",
+    "size": "medium",
+    "address": "221B Baker Street"
+  },
+  {
+    "pizza": "pepperoni",
+    "size": "large",
+    "address": "5th Avenue, NYC"
+  },
+  {
+    "pizza": "veggie",
+    "size": "small",
+    "address": "Whitefield, Bangalore"
+  },
+  {
+    "pizza": "bbq chicken",
+    "size": "medium",
+    "address": "Baner, Pune"
+  },
+  {
+    "pizza": "four cheese",
+    "size": "large",
+    "address": "Gachibowli, Hyderabad"
+  }
+]
