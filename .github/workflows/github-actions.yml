@@ -11,10 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install k6
+      - name: Install k6 on Windows
         run: |
-          sudo apt update
-          sudo apt install -y k6
+          choco install k6 -y
 
       - name: Run k6 test
         run: k6 run --out influxdb=http://k6:k6pass@localhost:8086/k6 scripts/scenario.js
