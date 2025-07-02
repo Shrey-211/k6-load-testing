@@ -1,0 +1,72 @@
+.PHONY: up down test logs clean setup health verify help
+
+up:
+	docker-compose up -d influxdb grafana
+	@echo "🚀 Monitoring stack started!"
+	@echo "📊 Grafana: http://localhost:3000 (admin/admin123)"
+	@echo "📈 InfluxDB: http://localhost:8086"
+
+down:
+	docker-compose down
+
+test-basic:
+	docker-compose run --rm k6 run /scripts/basic-load-test.js
+
+test-ecommerce:
+	docker-compose run --rm k6 run /scripts/advanced-ecommerce-test.js
+
+test-custom:
+	docker-compose run --rm k6 run \
+		-e ENVIRONMENT=staging \
+		-e BASE_URL=http://localhost:5000 \
+		-e VUS=20 \
+		-e DURATION=5m \
+		/scripts/basic-load-test.js
+
+test-stress:
+	docker-compose run --rm k6 run \
+		--vus 100 \
+		--duration 10m \
+		/scripts/basic-load-test.js
+
+logs:
+	docker-compose logs -f
+
+logs-k6:
+	docker-compose logs -f k6
+
+logs-grafana:
+	docker-compose logs -f grafana
+
+logs-influxdb:
+	docker-compose logs -f influxdb
+
+clean:
+	docker-compose down -v
+	docker system prune -f
+
+setup:
+	mkdir -p k6/scripts k6/data grafana/dashboards grafana/provisioning/datasources grafana/provisioning/dashboards influxdb
+	@echo "📁 Folder structure created"
+
+health:
+	@curl -f http://localhost:8086/ping && echo "✅ InfluxDB is healthy" || echo "❌ InfluxDB is not responding"
+	@curl -f http://localhost:3000/api/health && echo "✅ Grafana is healthy" || echo "❌ Grafana is not responding"
+
+verify:
+	docker-compose run --rm k6 run --vus 1 --duration 10s - <<< "import http from 'k6/http'; export default function() { http.get('https://httpbin.org/get'); }"
+
+help:
+	@echo "Available commands:"
+	@echo "  make up            - Start monitoring stack"
+	@echo "  make down          - Stop all services"
+	@echo "  make test-basic    - Run basic load test"
+	@echo "  make test-ecommerce- Run e-commerce test"
+	@echo "  make test-custom   - Run test with custom parameters"
+	@echo "  make test-stress   - Run stress test"
+	@echo "  make logs          - View all logs"
+	@echo "  make clean         - Clean up everything"
+	@echo "  make setup         - Create folder structure"
+	@echo "  make health        - Check service health"
+	@echo "  make verify        - Quick verification test"
+	@echo "  make help          - Show this help"
