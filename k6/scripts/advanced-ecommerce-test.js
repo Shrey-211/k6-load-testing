@@ -91,7 +91,7 @@ const userCredentials = [
 ];
 
 // Configuration
-const BASE_URL = __ENV.BASE_URL || 'http://localhost:5000';
+const BASE_URL = __ENV.BASE_URL || 'http://host.docker.internal:5000';
 const API_KEY = __ENV.API_KEY || 'test-api-key';
 
 // Setup function
